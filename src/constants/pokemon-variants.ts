@@ -1,4 +1,4 @@
-export enum PokemonBaseTypesEnum {
+export enum PokemonTypesToColorEnum {
   grass = "green",
   bug = "green",
   normal = "gray",
@@ -6,9 +6,9 @@ export enum PokemonBaseTypesEnum {
   water = "blue",
 }
 
-export type PokemonBaseTypes = keyof typeof PokemonBaseTypesEnum;
+export type PokemonBaseTypes = keyof typeof PokemonTypesToColorEnum;
 
-export const PokemonBaseTypesArray = Object.keys(PokemonBaseTypesEnum);
+export const PokemonBaseTypesArray = Object.keys(PokemonTypesToColorEnum);
 
 export enum PokemonColorsEnum {
   green = "green",
