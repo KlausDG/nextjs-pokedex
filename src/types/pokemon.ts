@@ -8,9 +8,11 @@ export type Pokemon = {
       };
     };
   };
-  types: Array<{
-    type: {
-      name: string;
-    };
-  }>;
+  types: PokemonTypes;
 };
+
+export type PokemonTypes = Array<{
+  type: {
+    name: string;
+  };
+}>;
