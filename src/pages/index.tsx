@@ -1,5 +1,5 @@
 import { ListContainer, PokemonCard } from "@/concepts/pokemon-list/components";
-import { PokemonListResponse } from "@/concepts/pokemon-list/types/pokemon-list";
+import { PokemonListResponse } from "@/concepts/pokemon-list/types";
 import axios from "axios";
 
 export default function Home({ pokemons }: PokemonListResponse) {

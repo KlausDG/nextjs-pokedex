@@ -1,16 +1,19 @@
 import {
   PokemonBaseTypes,
+  PokemonBaseTypesArray,
+  PokemonBaseTypesEnum,
   PokemonColors,
-  PokemonVariants,
 } from "@/constants/pokemon-variants";
 import { Pokemon } from "@/types/pokemon";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
+
 import { Text, Pill } from "@/components";
 
 import * as Styled from "./pokemon-card.styles";
 import { PokemonCardProps } from "./pokemon-card.types";
+import { PokemonImage } from "../pokemon-image";
+import { isOfType } from "@/utils";
 
 export const PokemonCard = ({ data }: PokemonCardProps) => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
@@ -21,14 +24,34 @@ export const PokemonCard = ({ data }: PokemonCardProps) => {
   }, []);
 
   useEffect(() => {
+    handlePokemonColor();
+  }, [pokemon]);
+
+  const paddedId = pokemon && pokemon.id.toString().padStart(3, "0");
+
+  const handlePokemonColor = useCallback(() => {
     if (pokemon) {
-      const baseType = getFirstpokemonType(pokemon.types);
+      const baseType = getFirstPokemonType(pokemon.types);
       const color = getPokemonColor(baseType);
       setPokemonColor(color);
     }
   }, [pokemon]);
 
-  const paddedId = pokemon && pokemon.id.toString().padStart(3, "0");
+  const getPokemonImage = () => {
+    return pokemon?.sprites.other["official-artwork"].front_default;
+  };
+
+  const getFirstPokemonType = (types: Array<{ type: { name: string } }>) => {
+    const type = types[0].type.name;
+    if (isOfType<PokemonBaseTypes>(type, PokemonBaseTypesArray)) {
+      return type;
+    }
+    throw new Error("tipo inválido");
+  };
+
+  const getPokemonColor = (type: PokemonBaseTypes): PokemonColors => {
+    return PokemonBaseTypesEnum[type] as PokemonColors;
+  };
 
   return (
     <>
@@ -40,7 +63,7 @@ export const PokemonCard = ({ data }: PokemonCardProps) => {
             </Text>
             <Styled.PokemonTypesContainer>
               {pokemon?.types?.map((prop) => (
-                <Pill color={pokemonColor}>
+                <Pill key={prop.type.name} color={pokemonColor}>
                   <Text capitalize fontSize="8">
                     {prop.type.name}
                   </Text>
@@ -54,44 +77,10 @@ export const PokemonCard = ({ data }: PokemonCardProps) => {
             </Text>
           </Styled.PokemonIdContainer>
           <Styled.PokemonImageContainer>
-            <Image
-              src={pokemon?.sprites?.other["official-artwork"]?.front_default}
-              alt={pokemon.name}
-              width={50}
-              height={50}
-              blurDataURL="URL"
-              placeholder="blur"
-            />
+            <PokemonImage src={getPokemonImage()!} alt={pokemon.name} />
           </Styled.PokemonImageContainer>
         </Styled.Container>
       )}
     </>
   );
 };
-
-const getFirstpokemonType = (types: Array<{ type: { name: string } }>) => {
-  const type = types[0].type.name;
-  if (
-    isOfType<PokemonBaseTypes>(type, [
-      "grass",
-      "bug",
-      "normal",
-      "fire",
-      "water",
-    ])
-  ) {
-    return type;
-  }
-  throw new Error("tipo inválido");
-};
-
-const getPokemonColor = (type: string): PokemonColors => {
-  return PokemonVariants[type] as PokemonColors;
-};
-
-function isOfType<T extends string>(
-  value: string,
-  unionValues: Array<string>
-): value is T {
-  return unionValues.includes(value);
-}
