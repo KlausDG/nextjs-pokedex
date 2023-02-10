@@ -3,17 +3,18 @@ import {
   PokemonColors,
   PokemonVariants,
 } from "@/constants/pokemon-variants";
+import { Pokemon } from "@/types/pokemon";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Image } from "../image/image";
-import { Pill } from "../pill/pill";
-import { Text } from "../text/text";
+import Image from "next/image";
+import { Text, Pill } from "@/components";
 
-import * as Styled from "./card.styles";
+import * as Styled from "./pokemon-card.styles";
+import { PokemonCardProps } from "./pokemon-card.types";
 
-export const PokemonCard = ({ data }) => {
-  const [pokemon, setPokemon] = useState(null);
-  const [pokemonColor, setPokemonColor] = useState(null);
+export const PokemonCard = ({ data }: PokemonCardProps) => {
+  const [pokemon, setPokemon] = useState<Pokemon | null>(null);
+  const [pokemonColor, setPokemonColor] = useState<PokemonColors>("gray");
 
   useEffect(() => {
     axios.get(data.url).then((response) => setPokemon(response.data));
@@ -27,7 +28,7 @@ export const PokemonCard = ({ data }) => {
     }
   }, [pokemon]);
 
-  const paddedId = pokemon && pokemon.id.toString().padStart(3, 0);
+  const paddedId = pokemon && pokemon.id.toString().padStart(3, "0");
 
   return (
     <>
@@ -53,7 +54,14 @@ export const PokemonCard = ({ data }) => {
             </Text>
           </Styled.PokemonIdContainer>
           <Styled.PokemonImageContainer>
-            <Image src={pokemon?.sprites?.front_default} alt={pokemon.name} />
+            <Image
+              src={pokemon?.sprites?.other["official-artwork"]?.front_default}
+              alt={pokemon.name}
+              width={50}
+              height={50}
+              blurDataURL="URL"
+              placeholder="blur"
+            />
           </Styled.PokemonImageContainer>
         </Styled.Container>
       )}
@@ -62,9 +70,28 @@ export const PokemonCard = ({ data }) => {
 };
 
 const getFirstpokemonType = (types: Array<{ type: { name: string } }>) => {
-  return types[0].type.name;
+  const type = types[0].type.name;
+  if (
+    isOfType<PokemonBaseTypes>(type, [
+      "grass",
+      "bug",
+      "normal",
+      "fire",
+      "water",
+    ])
+  ) {
+    return type;
+  }
+  throw new Error("tipo inválido");
 };
 
-const getPokemonColor = (type: PokemonBaseTypes) => {
+const getPokemonColor = (type: string): PokemonColors => {
   return PokemonVariants[type] as PokemonColors;
 };
+
+function isOfType<T extends string>(
+  value: string,
+  unionValues: Array<string>
+): value is T {
+  return unionValues.includes(value);
+}

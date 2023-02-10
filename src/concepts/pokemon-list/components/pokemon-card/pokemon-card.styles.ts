@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { CardColorOptions, ContainerProps } from "./card.types";
+import { CardColorOptions, ContainerProps } from "./pokemon-card.types";
 
 export const Container = styled.div<ContainerProps>`
   position: relative;
