@@ -3,6 +3,7 @@ import {
   PokemonBaseTypesArray,
   PokemonBaseTypesEnum,
   PokemonColors,
+  PokemonColorsArray,
 } from "@/constants/pokemon-variants";
 import { Pokemon } from "@/types/pokemon";
 import axios from "axios";
@@ -49,8 +50,11 @@ export const PokemonCard = ({ data }: PokemonCardProps) => {
     throw new Error("tipo inválido");
   };
 
-  const getPokemonColor = (type: PokemonBaseTypes): PokemonColors => {
-    return PokemonBaseTypesEnum[type] as PokemonColors;
+  const getPokemonColor = (type: PokemonBaseTypes) => {
+    if (isOfType<PokemonColors>(type, PokemonColorsArray)) {
+      return PokemonBaseTypesEnum[type] as PokemonColors;
+    }
+    throw new Error("tipo inválido");
   };
 
   return (
