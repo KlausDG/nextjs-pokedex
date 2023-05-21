@@ -30,13 +30,15 @@ const handlePokemonColor = (pokemonTypes: PokemonTypes) => {
 };
 
 const handlePokemonTypes = (pokemonTypes: PokemonTypes) => {
-  return pokemonTypes.map((current) => current.type.name);
+  return pokemonTypes.map(
+    (current) => current.type.name
+  ) as Array<PokemonBaseTypes>;
 };
 
 const getFirstPokemonType = (types: PokemonTypes) => {
   const type = types[0].type.name;
   if (!isOfType<PokemonBaseTypes>(type, PokemonBaseTypesArray)) {
-    throw new Error("tipo inválido");
+    throw new Error(`Tipo ${type} inválido`);
   }
   return type;
 };
@@ -44,7 +46,7 @@ const getFirstPokemonType = (types: PokemonTypes) => {
 const getPokemonColor = (type: PokemonBaseTypes) => {
   const color = PokemonTypesToColorEnum[type];
   if (!isOfType<PokemonColors>(color, PokemonColorsArray)) {
-    throw new Error("tipo inválido");
+    throw new Error(`tipo ${color} inválido`);
   }
   return color;
 };

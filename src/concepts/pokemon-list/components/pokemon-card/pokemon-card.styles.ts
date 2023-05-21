@@ -32,8 +32,8 @@ export const PokemonIdContainer = styled.section`
 
 export const PokemonImageContainer = styled.section`
   position: absolute;
-  top: 25px;
-  right: -15px;
+  top: 40px;
+  right: 5px;
   display: flex;
   align-items: center;
   justify-content: center;

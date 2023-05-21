@@ -1,8 +1,9 @@
 import { useQuery } from "react-query";
 import { getPokemon } from "../../repository";
 import { formatPokemonResponse } from "./usePokemon.formatter";
+import { UsePokemonReturn } from "./usePokemon.types";
 
-export const usePokemon = (url: string) => {
+export const usePokemon = (url: string): UsePokemonReturn => {
   const pokemonQuery = useQuery(url, () => getPokemon(url));
 
   if (!pokemonQuery.isSuccess) {
@@ -11,7 +12,8 @@ export const usePokemon = (url: string) => {
         id: "",
         name: "",
         types: [],
-        color: "",
+
+        color: "gray",
         image: "",
       },
     };
